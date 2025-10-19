@@ -1,0 +1,180 @@
+/* Custom styles for Student Dropout Prediction App */
+
+:root {
+    --primary-color: #1f77b4;
+    --secondary-color: #ff7f0e;
+    --success-color: #2ca02c;
+    --warning-color: #ff9800;
+    --error-color: #d32f2f;
+    --background-light: #ffffff;
+    --background-dark: #0e1117;
+    --text-light: #262730;
+    --text-dark: #fafafa;
+    --border-radius: 8px;
+    --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Light mode styles */
+.light-mode {
+    --background: var(--background-light);
+    --text-color: var(--text-light);
+}
+
+/* Dark mode styles */
+.dark-mode {
+    --background: var(--background-dark);
+    --text-color: var(--text-dark);
+}
+
+/* Custom metric cards */
+.metric-card {
+    background: var(--background);
+    color: var(--text-color);
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    border: 1px solid rgba(128, 128, 128, 0.2);
+    margin: 0.5rem 0;
+    text-align: center;
+}
+
+.metric-value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.metric-label {
+    font-size: 0.9rem;
+    color: var(--text-color);
+    opacity: 0.8;
+}
+
+/* Progress indicators */
+.progress-container {
+    background: rgba(128, 128, 128, 0.1);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    height: 8px;
+    margin: 0.5rem 0;
+}
+
+.progress-bar {
+    background: var(--primary-color);
+    height: 100%;
+    transition: width 0.3s ease;
+}
+
+/* Status indicators */
+.status-success {
+    color: var(--success-color);
+}
+
+.status-warning {
+    color: var(--warning-color);
+}
+
+.status-error {
+    color: var(--error-color);
+}
+
+/* Custom buttons */
+.custom-button {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.custom-button:hover {
+    background: rgba(31, 119, 180, 0.8);
+}
+
+/* Model comparison table styling */
+.model-comparison {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1rem 0;
+}
+
+.model-comparison th,
+.model-comparison td {
+    border: 1px solid rgba(128, 128, 128, 0.2);
+    padding: 0.75rem;
+    text-align: left;
+}
+
+.model-comparison th {
+    background: var(--primary-color);
+    color: white;
+    font-weight: bold;
+}
+
+.model-comparison tr:nth-child(even) {
+    background: rgba(128, 128, 128, 0.05);
+}
+
+/* Interpretation section styling */
+.interpretation-section {
+    background: var(--background);
+    border: 1px solid rgba(128, 128, 128, 0.2);
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+/* Feature importance bars */
+.feature-importance {
+    display: flex;
+    align-items: center;
+    margin: 0.25rem 0;
+}
+
+.feature-name {
+    width: 150px;
+    font-size: 0.9rem;
+}
+
+.importance-bar {
+    flex: 1;
+    height: 20px;
+    background: rgba(128, 128, 128, 0.1);
+    border-radius: 10px;
+    margin: 0 0.5rem;
+    position: relative;
+}
+
+.importance-fill {
+    height: 100%;
+    background: var(--primary-color);
+    border-radius: 10px;
+    transition: width 0.5s ease;
+}
+
+.importance-value {
+    font-size: 0.8rem;
+    color: var(--text-color);
+    width: 50px;
+    text-align: right;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .metric-card {
+        margin: 0.25rem 0;
+        padding: 0.75rem;
+    }
+    
+    .feature-name {
+        width: 120px;
+        font-size: 0.8rem;
+    }
+    
+    .importance-value {
+        width: 40px;
+        font-size: 0.7rem;
+    }
+}
