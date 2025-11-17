@@ -44,6 +44,8 @@ dependencies = [
     # Additional utilities
     "joblib>=1.1.0",
     "umap>=0.1.1",
+    "umap-learn>=0.5.7",
+    "requests>=2.32.4",
 ]
 
 [project.optional-dependencies]

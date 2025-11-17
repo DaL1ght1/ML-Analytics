@@ -11,10 +11,18 @@ from sklearn.metrics import silhouette_score, davies_bouldin_score
 
 try:
     import umap
-
+    if hasattr(umap, "UMAP"):
+        UMAPClass = umap.UMAP
+    else:
+        from umap import UMAP as UMAPClass
     UMAP_AVAILABLE = True
-except ImportError:
-    UMAP_AVAILABLE = False
+except Exception:
+    try:
+        from umap.umap_ import UMAP as UMAPClass
+        UMAP_AVAILABLE = True
+    except Exception:
+        UMAP_AVAILABLE = False
+        UMAPClass = None
 
 
 class ClusteringPreprocessor:
@@ -93,11 +101,9 @@ def reduce_dimensions(
         )
         return reducer.fit_transform(X)
     if m == "umap":
-        if not UMAP_AVAILABLE:
-            raise ImportError(
-                "UMAP is not installed. Install umap-learn to use this reducer."
-            )
-        reducer = umap.UMAP(n_components=n_components, random_state=random_state)
+        if not UMAP_AVAILABLE or UMAPClass is None:
+            raise ImportError("UMAP is not installed or not available. Install umap-learn to use this reducer.")
+        reducer = UMAPClass(n_components=n_components, random_state=random_state)
         return reducer.fit_transform(X)
     raise ValueError(f"Unknown reduction method: {method}")
 

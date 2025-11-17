@@ -112,6 +112,9 @@ def main():
 
     # Sidebar for navigation
     st.sidebar.title("Navigation")
+    if "gemini_api_key" not in st.session_state:
+        st.session_state.gemini_api_key = ""
+    st.sidebar.text_input("Gemini API key", type="password", key="gemini_api_key")
     page = st.sidebar.selectbox(
         "Select a page:",
         [
@@ -377,7 +380,7 @@ def data_upload_page():
                             col for col in display_cols if col in results_df.columns
                         ]
                         if available_cols:
-                            st.dataframe(results_df[available_cols], width="stretch")
+                            st.dataframe(results_df[available_cols])
 
                 # Option to reload this configuration
                 if st.button(f"🔄 Use This Configuration", key=f"reload_{i}"):
@@ -566,7 +569,7 @@ def model_training_page():
                 # Display training summary
                 st.subheader("📊 Training Summary")
                 comparison_df = trainer.get_model_comparison()
-                st.dataframe(comparison_df, width="stretch")
+                st.dataframe(comparison_df)
 
                 # Best model
                 best_model_info = None
@@ -636,7 +639,7 @@ def model_training_page():
                     fig = viz.plot_training_history(
                         training_times, accuracies, model_names
                     )
-                    st.plotly_chart(fig, width="stretch")
+                    st.plotly_chart(fig)
             except Exception as e:
                 st.warning(f"Could not create training history plot: {e}")
 
@@ -689,7 +692,7 @@ def model_evaluation_page():
                 viz = Visualizer()
                 fig = viz.plot_model_comparison(comparison_df, selected_metric)
                 if fig:
-                    st.plotly_chart(fig, width="stretch")
+                    st.plotly_chart(fig)
 
         with col2:
             # Feature importance for tree-based models
@@ -712,7 +715,7 @@ def model_evaluation_page():
                 st.plotly_chart(fig, width="stretch")
 
                 # Show feature importance table
-                st.dataframe(importance_df.head(top_n), width="stretch")
+                st.dataframe(importance_df.head(top_n))
             else:
                 st.info(
                     f"{selected_model} does not support feature importance visualization."
@@ -767,7 +770,7 @@ def model_evaluation_page():
                             labels=class_names,
                             title=f"{selected_model} Confusion Matrix",
                         )
-                        st.plotly_chart(cm_fig, width="stretch")
+                    st.plotly_chart(cm_fig)
 
                     with col2:
                         st.subheader("🎯 Normalized Confusion Matrix")
@@ -778,7 +781,7 @@ def model_evaluation_page():
                             title=f"{selected_model} Normalized Confusion Matrix",
                             normalize=True,
                         )
-                        st.plotly_chart(cm_fig_norm, width="stretch")
+                        st.plotly_chart(cm_fig_norm)
 
                 # Classification report
                 st.subheader("📋 Classification Report")
@@ -786,7 +789,7 @@ def model_evaluation_page():
                     report_df = pd.DataFrame(
                         detailed_eval["classification_report"]
                     ).transpose()
-                    st.dataframe(report_df, width="stretch")
+                    st.dataframe(report_df)
 
                 # ROC Curves (if available)
                 if (
@@ -805,7 +808,7 @@ def model_evaluation_page():
                         roc_fig = viz.plot_roc_curves(
                             models_data, f"{selected_model} ROC Curve"
                         )
-                        st.plotly_chart(roc_fig, width="stretch")
+                        st.plotly_chart(roc_fig)
                     except Exception as e:
                         st.warning(f"Could not plot ROC curve: {e}")
 
@@ -838,7 +841,7 @@ def model_evaluation_page():
                     roc_comparison_fig = viz.plot_roc_curves(
                         models_data, "All Models ROC Comparison"
                     )
-                    st.plotly_chart(roc_comparison_fig, width="stretch")
+                    st.plotly_chart(roc_comparison_fig)
             except Exception as e:
                 st.warning(f"Could not create ROC comparison: {e}")
 
@@ -925,10 +928,9 @@ def model_interpretation_page():
                                 f"{selected_model} SHAP Feature Importance",
                                 top_n,
                             )
-                            st.plotly_chart(shap_fig, width="stretch")
+                            st.plotly_chart(shap_fig)
 
-                            # Table
-                            st.dataframe(shap_importance.head(top_n), width="stretch")
+                            st.dataframe(shap_importance.head(top_n))
                         else:
                             st.warning("Could not compute SHAP feature importance.")
                     else:
@@ -949,7 +951,7 @@ def model_interpretation_page():
                             f"{selected_model} Built-in Feature Importance",
                             15,
                         )
-                        st.plotly_chart(tree_fig, width="stretch")
+                        st.plotly_chart(tree_fig)
 
                 elif interpretation_type == "Individual Prediction Explanation":
                     st.subheader("🔍 Individual Prediction Explanation")
@@ -1019,7 +1021,7 @@ def model_interpretation_page():
                                         lime_exp
                                     )
                                     if lime_fig:
-                                        st.plotly_chart(lime_fig, width="stretch")
+                                        st.plotly_chart(lime_fig)
                                 else:
                                     st.warning("Could not generate LIME explanation.")
                             except Exception as e:
@@ -1034,7 +1036,7 @@ def model_interpretation_page():
                                     "Value": sample[0],
                                 }
                             )
-                            st.dataframe(feature_values, width="stretch")
+                            st.dataframe(feature_values)
 
                 elif interpretation_type == "Model Comparison":
                     st.subheader("⚖️ Model Interpretation Comparison")
@@ -1090,7 +1092,7 @@ def model_interpretation_page():
                                                 f"{model_name}",
                                                 10,
                                             )
-                                            st.plotly_chart(fig, width="stretch")
+                                            st.plotly_chart(fig)
                         else:
                             st.info("Please select at least 2 models to compare.")
                     else:
@@ -1175,7 +1177,7 @@ def clustering_page():
                     color="cluster",
                     title=f"{algorithm} on {reducer_name}",
                 )
-                st.plotly_chart(fig, width="stretch")
+                st.plotly_chart(fig)
             else:
                 viz_df = pd.DataFrame(
                     {
@@ -1193,10 +1195,10 @@ def clustering_page():
                     color="cluster",
                     title=f"{algorithm} on {reducer_name}",
                 )
-                st.plotly_chart(fig, width="stretch")
+                st.plotly_chart(fig)
             st.subheader("Cluster Profiles")
             summary = summarize_clusters(df_features, labels)
-            st.dataframe(summary, width="stretch")
+            st.dataframe(summary)
             comparison_results: Dict[str, Dict[str, Any]] = {}
             baseline_algorithms = ["K-Means", "DBSCAN", "GMM", "OPTICS"]
             for name in baseline_algorithms:
@@ -1222,11 +1224,16 @@ def clustering_page():
             if comparison_results:
                 st.subheader("Algorithm Comparison")
                 table = build_comparison_table(comparison_results)
-                st.dataframe(table, width="stretch")
+                st.dataframe(table)
             st.subheader("Insight Summary")
             with st.expander("Automatic cluster insights"):
                 insight_text = generate_cluster_insights(summary)
                 st.write(insight_text)
+            api_key = st.session_state.get("gemini_api_key", "")
+            if api_key:
+                st.subheader("Gemini Feedback")
+                feedback = get_gemini_feedback(api_key, summary, insight_text)
+                st.write(feedback)
             if st.session_state.upload_history:
                 latest_entry = st.session_state.upload_history[-1]
                 if "clustering_results" not in latest_entry:
@@ -1282,8 +1289,77 @@ def generate_cluster_insights(summary: pd.DataFrame) -> str:
     return "\n".join(parts)
 
 
+def get_gemini_feedback(api_key: str, summary: pd.DataFrame, insight_text: str) -> str:
+    if not api_key:
+        return "No Gemini API key provided."
+
+    try:
+        import requests
+    except ImportError:
+        return "The 'requests' library is not installed. Install it with 'pip install requests'."
+
+    try:
+        # Compact text summary of the cluster table
+        summary_text = summary.head(10).to_string(index=False)
+        prompt = (
+            "You are an AI assistant that analyzes clustering results. "
+            "The following is a table of cluster-level statistics and a heuristic textual summary. "
+            "Provide concise feedback about the quality of the clustering, potential issues, "
+            "and suggestions for improving the clustering configuration.\n\n"
+            "Cluster summary table:\n"
+            f"{summary_text}\n\n"
+            "Heuristic summary:\n"
+            f"{insight_text}\n\n"
+            "Feedback:"
+        )
+
+        # ✅ Use current v1 endpoint + x-goog-api-key header
+        model_name = "gemini-2.0-flash"  # change to "gemini-1.5-flash" if you prefer
+        url = f"https://generativelanguage.googleapis.com/v1/models/{model_name}:generateContent"
+
+        headers = {
+            "Content-Type": "application/json",
+            "x-goog-api-key": api_key,
+        }
+
+        body = {"contents": [{"parts": [{"text": prompt}]}]}
+
+        resp = requests.post(url, headers=headers, json=body, timeout=30)
+
+        if resp.status_code != 200:
+            # Try to surface a useful error message from the API
+            msg = f"Gemini API error: {resp.status_code}"
+            try:
+                err_json = resp.json()
+                if "error" in err_json and "message" in err_json["error"]:
+                    msg += f" - {err_json['error']['message']}"
+            except Exception:
+                pass
+            return msg
+
+        data = resp.json()
+        candidates = data.get("candidates") or []
+        if not candidates:
+            return "No feedback generated."
+
+        content = candidates[0].get("content") or {}
+        parts = content.get("parts") or []
+
+        # Standard text response location
+        if parts and isinstance(parts[0], dict) and "text" in parts[0]:
+            return (parts[0]["text"] or "").strip()
+
+        # Fallback if text is directly on candidate (older / edge cases)
+        if "text" in candidates[0]:
+            return (candidates[0]["text"] or "").strip()
+
+        return "No feedback generated."
+
+    except Exception as e:
+        return f"Gemini request failed: {e}"
+
+
 def history_page():
-    """Comprehensive upload and training history page"""
     st.header("📊 Upload & Training History")
 
     if not st.session_state.upload_history:
